@@ -10,9 +10,9 @@ import (
 )
 
 type Post struct {
-	Id          uint
-	Title       string
-	Description string
+	Id          uint   `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 func main() {
@@ -32,7 +32,24 @@ func main() {
 	app.Use(cors.New())
 
 	app.Get("/api/posts", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World  postings here👋!")
+		var posts []Post // create a slice of posts
+
+		db.Find(&posts) // find all posts
+
+		return c.JSON(posts) // return all posts
 	})
+
+	app.Post("/api/posts", func(c *fiber.Ctx) error {
+		var post Post // create a post
+
+		if err := c.BodyParser(&post); err != nil { // parse the body of the request
+			return err
+		}
+
+		db.Create(&post) // create a post
+
+		return c.JSON(post) // return the post
+	})
+
 	app.Listen(":8000")
 }
