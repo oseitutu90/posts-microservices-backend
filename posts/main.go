@@ -5,7 +5,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"gorm.io/driver/mysql" // need to install this
+	"gorm.io/driver/mysql" // need to install this driver
 	"gorm.io/gorm"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	// https://github.com/go-sql-driver/mysql
 	dsn := "root:Geforce229!@tcp(localhost:3306)/posts_ms?charset=utf8&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{}) // Pass the connection to the database to the GORM
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{}) // Pass the connection to the database to the gorm.Open function
 
 	if err != nil {
 		panic(err)
@@ -27,9 +27,9 @@ func main() {
 
 	db.AutoMigrate(&Post{})
 
-	app := fiber.New()
+	app := fiber.New() // create a new fiber app
 
-	app.Use(cors.New())
+	app.Use(cors.New()) // enable cors
 
 	app.Get("/api/posts", func(c *fiber.Ctx) error {
 		var posts []Post // create a slice of posts

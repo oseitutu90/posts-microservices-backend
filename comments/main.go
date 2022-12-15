@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Comment struct {
+type Comment struct { // Comment model
 	Id     uint
 	PostId uint
 	Text   string
@@ -17,11 +17,11 @@ func main() {
 	dsn := "root:Geforce229!@tcp(localhost:3306)/comments_ms?charset=utf8&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{}) // Pass the connection to the database to the GORM
 
-	if err != nil {
+	if err != nil { // Check for errors
 		panic(err)
 	}
 
-	db.AutoMigrate(&Comment{})
+	db.AutoMigrate(&Comment{}) // Migrate the schema
 
 	app := fiber.New()
 
