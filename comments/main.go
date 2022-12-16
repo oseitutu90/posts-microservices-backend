@@ -27,9 +27,17 @@ func main() {
 
 	app.Use(cors.New()) // allow cors
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World comments here👋!")
-	})
+	app.Post("/comments", func(c *fiber.Ctx) error {
+		var comment Comment
+
+		if err := c.BodyParser(&comment); err != nil { // Parse the body of the request
+			return err
+		} // Create comment
+
+		db.Create(&comment)
+
+		return c.JSON(comment) // Return the comment
+	}) // Get all comments
 
 	app.Listen(":8001")
 }

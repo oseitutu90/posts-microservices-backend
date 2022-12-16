@@ -3,6 +3,9 @@
 package main
 
 import (
+	"bytes"
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"gorm.io/driver/mysql" // need to install this driver
@@ -16,6 +19,10 @@ type Post struct {
 }
 
 func main() {
+	var (
+		buf    bytes.Buffer
+		logger = log.New(&buf, "logger: ", log.Lshortfile)
+	)
 
 	// https://github.com/go-sql-driver/mysql
 	dsn := "root:Geforce229!@tcp(localhost:3306)/posts_ms?charset=utf8&parseTime=True&loc=Local"
@@ -25,6 +32,7 @@ func main() {
 		panic(err)
 	}
 
+	logger.Println("Connected to the database")
 	db.AutoMigrate(&Post{})
 
 	app := fiber.New() // create a new fiber app
