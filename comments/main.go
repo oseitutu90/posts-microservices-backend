@@ -8,9 +8,9 @@ import (
 )
 
 type Comment struct { // Comment model
-	Id     uint
-	PostId uint
-	Text   string
+	Id     uint   `json:"id"`
+	PostId uint   `json: "postId"`
+	Text   string `json: "text"`
 }
 
 func main() {
@@ -27,9 +27,16 @@ func main() {
 
 	app.Use(cors.New()) // allow cors
 
-	app.Post("/comments", func(c *fiber.Ctx) error {
-		var comment Comment
+	app.Post("/api/posts/:id/comments", func(c *fiber.Ctx) error {
+		var comments []Comment
 
+		db.Find(&comments, "post_id = ?", c.Params("id")) // Get all comments
+
+		return c.JSON(comments)
+	})
+
+	app.Post("/api/comments", func(c *fiber.Ctx) error {
+		var comment Comment                            // Create a comment
 		if err := c.BodyParser(&comment); err != nil { // Parse the body of the request
 			return err
 		} // Create comment
